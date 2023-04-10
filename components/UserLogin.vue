@@ -29,6 +29,8 @@
 
 <script>
 import axios from 'axios'
+import { IP_ADDRESS } from '@/main';
+
 export default {
   data() {
     return {
@@ -39,29 +41,28 @@ export default {
     };
   },
   methods: {
-    login() {
-      axios.post('http://10.17.131.177:8181/user/login', {
+    async login() {
+      try {
+        const response = await axios.post('http://'+IP_ADDRESS+':8181/user/login', {
           password: this.password,
           uid: this.username,
           // rememberMe: this.rememberMe
-      })
-      .then(response => {
+        })
+
         // 登录成功，跳转到用户主页
-        // this.$router.push('/home')
-        this.responseData = response.data
-        console.log(this.responseData)
-      }).catch(error => {
+        this.$router.push('/main')
+        console.log(response.data)
+      } catch (error) {
         // this.errorMessage = error.response.data.message
         console.log(error)
         console.log(this.password)
         console.log(this.username)
-      })
-      
+      }
     },
 
     forgotPassword() {
       // 跳转到重置密码页面
-      this.$router.push('/resetPassword')
+      // this.$router.push('/resetPassword')
     },
   },
 };
@@ -70,11 +71,14 @@ export default {
 <style>
 .login-container {
   max-width: 400px;
+  min-width: 500px;
   margin: auto;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 5px;
+  background-color: #ffff;
 }
+
 .form-group {
   margin-bottom: 20px;
 }
@@ -84,7 +88,7 @@ label {
 }
 input[type="text"],
 input[type="password"] {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;

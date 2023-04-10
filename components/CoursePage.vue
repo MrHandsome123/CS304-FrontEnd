@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import PageComponent from './components/PageComponent.vue';
+import PageComponent from './PageComponents.vue';
 
 export default {
   components: {

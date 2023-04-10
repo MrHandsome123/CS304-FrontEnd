@@ -1,20 +1,26 @@
 <template>
   <div id="page-component">
     <header>
-      <h1 class="course-name">{{ courseName }}</h1>
+      <h1 class="course-name">{{ "Software Engineer" }}</h1>
       <a href="/forum" class="forum-link">Discussion Forum</a>
     </header>
     <div class="announcement">
       <h2>Course Announcements</h2>
       <ul>
-        <li v-for="(announcement, index) in announcements" :key="index">{{ announcement }}</li>
+        <li v-for="announcement in announcements" :key="announcement.id" class="announcement-item">
+          <div class="announcement-content">
+            <strong>{{ announcement.subject }}</strong><br>
+            {{ announcement.content }}
+          </div>
+          <span class="announcement-date">{{ formatDate(announcement.createdAt) }}</span>
+        </li>
       </ul>
     </div>
     <h2>Course Schedule</h2>
     <table>
       <thead>
         <tr>
-          <th>Week</th>
+          <!-- <th>Week</th> -->
           <th>Date</th>
           <th>Topic</th>
           <th>Instructor</th>
@@ -23,11 +29,11 @@
       </thead>
       <tbody>
         <tr v-for="event in events" :key="event.eventId">
-          <td>Week {{ event.week }}</td>
+          <!-- <td>Week {{ event.week }}</td> -->
           <td>{{ formatDate(event.startTime) }}<br>{{ formatTimeRange(event.startTime, event.endTime) }}</td>
           <td>{{ event.eventName }}</td>
           <td>{{ event.instructor }}</td>
-          <td>{{ event.courseMaterial }}</td>
+          <td v-html="formatCourseMaterial(event.courseMaterial)"></td>
         </tr>
       </tbody>
     </table>
@@ -35,16 +41,17 @@
     <table>
       <thead>
         <tr>
-          <th>Week</th>
+          <th>Date</th>
           <th>Topic</th>
           <th>Homework Material</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(homework, index) in homeworkExamples" :key="index">
-          <td>Week {{ homework.week }}</td>
-          <td>{{ homework.topic }}</td>
-          <td>{{ homework.homeworkMaterial }}</td>
+          <td>{{ formatDate(homework.startTime) }} - {{ formatDate(homework.endTime) }}</td>
+          <td>{{ homework.eventName }}</td>
+          <td v-html="formatHomeworkMaterial(homework.eventResources)"></td>
+          <!-- <td>{{ homework.eventResources }}</td> -->
         </tr>
       </tbody>
     </table>
@@ -52,66 +59,103 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { IP_ADDRESS } from '@/main';
+
 export default {
   data() {
     return {
       events: [],
-      announcements: [
-        'Announcement 1',
-        'Announcement 2',
-        'Announcement 3',
-      ],
-      courseName: 'Course Name',
-      homeworkExamples: [
-        {
-          week: 1,
-          topic: 'Introduction',
-          homeworkMaterial: 'Assignment 1',
-        },
-        {
-          week: 2,
-          topic: 'Basic Concepts',
-          homeworkMaterial: 'Assignment 2',
-        },
-        {
-          week: 3,
-          topic: 'Advanced Techniques',
-          homeworkMaterial: 'Assignment 3',
-        },
-        {
-          week: 4,
-          topic: 'Final Project',
-          homeworkMaterial: 'Assignment 4',
-        },
-      ],
+      announcements: [],
+      homeworkExamples: [],
     };
   },
+
+
   created() {
     this.fetchEvents();
+    this.fetchAnnouncements();
+    this.fetchHomeworkExamples();
   },
   methods: {
     async fetchEvents() {
-      // Replace with your API endpoint
-      const response = await fetch("https://api.example.com/events");
-      const data = await response.json();
-      this.events = data.map((event, index) => {
-        event.week = index + 1;
-        return event;
-      });
+      try {
+        // Replace with your API endpoint
+        const response = await axios.get("http://"+IP_ADDRESS+":8181/courseEvent/listCourseEvent/1");
+        const data = response.data;
+        this.events = data.map((event, index) => {
+          return {
+            week: index + 1,
+            eventId: event.eventId,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            eventName: event.eventName,
+            instructor: event.eventInstructor,
+            courseMaterial: event.eventResources,
+          };
+        });
+        // console.log(this.events)
 
-      // Update courseName based on the first event in the array
-      if (this.events.length > 0) {
-        this.courseName = this.events[0].courseName;
+        // Update courseName based on the first event in the array
+        if (this.events.length > 0) {
+          this.courseName = this.events[0].eventName;
+        }
+      } catch (error) {
+        console.error(error);
       }
     },
+
+    async fetchAnnouncements() {
+      try {
+        // Replace with your API endpoint
+        const response = await axios.get("http://"+IP_ADDRESS+":8181/courseAnnouncement/listCourseAnnouncement/1");
+        this.announcements = response.data.map(announcement => {
+          return {
+            id: announcement.announcementId,
+            subject: announcement.subject,
+            content: announcement.content,
+            createdAt: announcement.createdAt,
+          };
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async fetchHomeworkExamples() {
+      try {
+        const response = await axios.get("http://"+IP_ADDRESS+":8181/courseEvent/listCourseEvent/1/Assignment");
+        this.homeworkExamples = response.data.map((homework) => {
+          return {
+            eventId: homework.eventId,
+            startTime: homework.startTime,
+            endTime: homework.endTime,
+            eventName: homework.eventName,
+            eventResources: homework.eventResources,
+          };
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     formatDate(dateString) {
       const date = new Date(dateString);
-      return `${date.getMonth() + 1}/${date.getDate()}`;
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     },
+
     formatTimeRange(startTimeString, endTimeString) {
       const startTime = new Date(startTimeString);
       const endTime = new Date(endTimeString);
       return `${startTime.getHours()}:${String(startTime.getMinutes()).padStart(2, "0")} - ${endTime.getHours()}:${String(endTime.getMinutes()).padStart(2, "0")}`;
+    },
+    formatCourseMaterial(courseMaterial) {
+      const materials = courseMaterial.split(";");
+      return materials.map(material => `<a href="${material}">${material}</a>`).join("<br>");
+    },
+    formatHomeworkMaterial(homeworkMaterial) {
+      const materials = homeworkMaterial.split(";");
+      return materials.map(material => `<a href="${material}">${material}</a>`).join("<br>");
     },
   },
 };
@@ -182,6 +226,22 @@ header {
   padding-left: 1.5rem;
 }
 
+.announcement-item {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+  margin-bottom: 1rem;
+}
+
+.announcement-date {
+  display: block;
+  font-size: 0.85rem;
+  color: #999;
+  margin-top: 0.5rem;
+}
+
+
 h2 {
   margin-bottom: 1rem;
   font-size: 2rem;
@@ -199,6 +259,7 @@ td {
   border: 1px solid black;
   padding: 8px;
   text-align: left;
+  white-space: pre-wrap;
 }
 
 th {
