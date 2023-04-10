@@ -33,11 +33,6 @@ export default defineComponent({
         /*select: this.handleDateSelect,
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents,*/
-        /* you can update a remote database when these fire:
-        eventAdd:
-        eventChange:
-        eventRemove:
-        */
       },
     }
   },

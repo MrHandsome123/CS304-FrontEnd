@@ -1,4 +1,3 @@
-//let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today
 import axios from 'axios';
 import { IP_ADDRESS } from '@/main';
 
