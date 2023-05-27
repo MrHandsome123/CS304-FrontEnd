@@ -1,9 +1,8 @@
-import Vue from 'vue'
 import Vuex from 'vuex'
-import * as getters from'./getters'
-import * as mutations from'./mutations'
-import * as actions from'./actions'
-Vue.use(Vuex);
+import * as getters from './getters'
+import * as mutations from './mutations'
+import * as actions from './action'
+
 
 const store = new Vuex.Store({
     //存储用户登录信息的一个状态

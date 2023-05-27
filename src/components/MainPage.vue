@@ -34,7 +34,7 @@ export default {
   methods: {
     async fetchCourses() {
       try {
-        const response = await axios.get("http://"+IP_ADDRESS+":8181/user/listUserCourse/11451414");
+        const response = await axios.get("http://"+IP_ADDRESS+":8181/course/listCourse");
         const data = response.data;
         this.ListData = data.map((Course) => {
           return {
@@ -79,7 +79,7 @@ export default {
  }
  .courseList {
   /* 设置宽度和其他样式 */
-  width: 300px;
+  width: 250px;
   line-height: 3;
   background: #eaf9ff;
   border-right: 1px solid #d3e2e8;

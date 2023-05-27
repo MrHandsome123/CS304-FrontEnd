@@ -1,37 +1,66 @@
 <template>
-  <div class="form-group">
-    <label for="courseName">CourseName</label>
-    <input type="text" id="courseName" v-model="courseName" required>
+  <div>
+    <form>
+      <h2>Add Course</h2>
+      <div class="form-group">
+      <label for="courseCode">CourseCode</label>
+      <input type="text" id="courseCode" v-model="courseCode" required>
+      </div>
+      <div class="form-group">
+        <label for="courseName">CourseName</label>
+        <input type="text" id="courseName" v-model="courseName" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" id="description" v-model="description" required>
+      </div>
+      <div class="form-group">
+        <label for="instructor">Instructor</label>
+        <input type="text" id="instructor" v-model="instructor" required>
+      </div>
+      <div class="form-group">
+        <label for="semester">Semester</label>
+        <input type="text" id="semester" v-model="semester" required>
+      </div>
+      <div class="form-group">
+        <button type="submit" @click.prevent="AddCourse">ADD</button>
+      </div>
+    </form>
   </div>
-  <div class="form-group">
-    <button type="submit" @click.prevent="AddCourse">Login</button>
-  </div>
+
 </template>
 
 <script>
 import axios from "axios";
 import {IP_ADDRESS} from "@/main";
-import store from "../../vuex/store";
+import store from "../store/store";
 
 export default {
   name: "AddCourse",
   store,
   data() {
     return {
-      courseName:''
+      courseCode: '',
+      courseName: '',
+      description: '',
+      instructor: '',
+      semester: ''
     };
   },
   methods:{
     async AddCourse() { // add a new course to the website
       try {
-        const response = await axios.post('http://'+IP_ADDRESS+':8181', {
+        const response = await axios.post('http://'+IP_ADDRESS+':8181/course/addCourse', {
+          courseCode: this.courseCode,
           courseName: this.courseName,
-          userName: store.getters.userName // 用户需要权限创建课程
+          description: this.description,
+          instructor: this.instructor,
+          semester: this.semester
         })
 
         // 创建成功提醒
         window.alert(this.courseName + " is created successfully!")
-
+        console.log(response.data)
       } catch (error) {
         this.errorMessage = error.response.data.message
         console.log(error)
