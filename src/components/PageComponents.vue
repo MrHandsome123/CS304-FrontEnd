@@ -1,8 +1,17 @@
 <template>
   <div id="page-component">
     <header>
-      <h1 class="course-name">{{ "Software Engineer" }}</h1>
-      <a href="/forum" class="forum-link">Discussion Forum</a>
+      <nav class="navigation">
+        
+        <button class="back-button" @click="goBack">
+          <i class="fas fa-arrow-left"></i> Go Back
+        </button>
+        <button class="edit-button" @click="editCourse">
+          <i class="fas fa-edit"></i> Edit Course
+        </button>
+        <h1 class="course-name">{{ "Software Engineer" }}</h1>
+        <a href="/forum" class="forum-link">Discussion Forum</a>
+      </nav>
     </header>
     <div class="announcement">
       <h2>Course Announcements</h2>
@@ -78,10 +87,21 @@ export default {
     this.fetchHomeworkExamples();
   },
   methods: {
+    goBack() {
+      // Implement your logic for going back
+    },
+
+    editCourse() {
+      this.$router.push('/editCourse');
+    },
+
     async fetchEvents() {
       try {
+        console.log(this.$route.params.courseId);
+
         // Replace with your API endpoint
         const response = await axios.get("http://"+IP_ADDRESS+":8181/courseEvent/listCourseEvent/1");
+        // const response = null;
         const data = response.data;
         this.events = data.map((event, index) => {
           return {
@@ -109,6 +129,7 @@ export default {
       try {
         // Replace with your API endpoint
         const response = await axios.get("http://"+IP_ADDRESS+":8181/courseAnnouncement/listCourseAnnouncement/1");
+        // const response = null;
         this.announcements = response.data.map(announcement => {
           return {
             id: announcement.announcementId,
@@ -125,6 +146,7 @@ export default {
     async fetchHomeworkExamples() {
       try {
         const response = await axios.get("http://"+IP_ADDRESS+":8181/courseEvent/listCourseEvent/1/Assignment");
+        // const response = null;
         this.homeworkExamples = response.data.map((homework) => {
           return {
             eventId: homework.eventId,
@@ -185,9 +207,50 @@ header {
   margin-bottom: 1rem;
 }
 
+
 .course-name {
   font-size: 2.5rem;
   color: #2c3e50;
+  /* width: 50%; */
+}
+
+/* new */
+.edit-button {
+  font-size: 1.25rem;
+  text-decoration: none;
+  color: #2980b9;
+  border: 1px solid #2980b9;
+  border-radius: 5px;
+  padding: 8px 12px;
+  transition: background-color 0.3s;
+  margin-right: 1rem;
+}
+
+.edit-button:hover {
+  background-color: #2980b9;
+  color: white;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 1rem;
+  background-color: #ecf0f1; /* 设置导航栏的背景色 */
+}
+
+.back-button {
+  font-size: 1.25rem;
+  text-decoration: none;
+  color: #2980b9;
+  border: 1px solid #2980b9;
+  border-radius: 5px;
+  padding: 8px 12px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: color 0.3s;
 }
 
 .forum-link {
@@ -200,7 +263,9 @@ header {
   transition: background-color 0.3s;
 }
 
+.back-button:hover,
 .forum-link:hover {
+  color: #2c3e50;
   background-color: #2980b9;
   color: white;
 }
