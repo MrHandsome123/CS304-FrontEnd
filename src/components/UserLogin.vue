@@ -20,6 +20,9 @@
       <div class="form-group">
         <a href="#" @click.prevent="forgotPassword">Forgot password?</a>
       </div>
+      <div class="form-group">
+        <p>Don't have an account? <a href="#" @click.prevent="register">Register</a></p>
+      </div>
     </form>
     <div v-if="errorMessage" class="error-message">
       {{ errorMessage }}
@@ -64,6 +67,12 @@ export default {
       // 跳转到重置密码页面
       // this.$router.push('/resetPassword')
     },
+    register() {
+      // 执行注册逻辑
+
+      // 使用Vue Router进行页面跳转
+      this.$router.push('/register'); // 在这里指定要跳转的目标路径，比如'/register'
+    }
   },
 };
 </script>
