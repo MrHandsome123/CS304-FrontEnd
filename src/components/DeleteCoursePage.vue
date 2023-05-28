@@ -30,7 +30,7 @@ export default {
   methods:{
     async fetchCourses() {
       try {
-        const response = await axios.get("http://"+IP_ADDRESS+":8181/course/listCourse");
+        const response = await axios.get("http://"+IP_ADDRESS+":8181/user/listUserCourse/" + sessionStorage.getItem("userName"));
         const data = response.data;
         this.courses = data.map((Course) => {
           return {

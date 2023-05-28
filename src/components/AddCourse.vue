@@ -50,7 +50,7 @@ export default {
   methods:{
     async AddCourse() { // add a new course to the website
       try {
-        const response = await axios.post('http://'+IP_ADDRESS+':8181/course/addCourse', {
+        const response = await axios.post('http://'+IP_ADDRESS+':8181/course/teacherAddCourse/' + sessionStorage.getItem("userName"), {
           courseCode: this.courseCode,
           courseName: this.courseName,
           description: this.description,

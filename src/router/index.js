@@ -19,7 +19,7 @@ const routes = [
     component: Main,
   },
   {
-    path: "/course",
+    path: "/course/:courseId",
     name: "course",
     component: Course,
   },
