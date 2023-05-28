@@ -10,16 +10,16 @@
         <label for="password">Password</label>
         <input type="password" id="password" v-model="password" required>
       </div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <input type="checkbox" id="remember-me" v-model="rememberMe">
         <label for="remember-me">Remember me</label>
-      </div>
+      </div> -->
       <div class="form-group">
         <button type="submit" @click.prevent="login">Login</button>
       </div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <a href="#" @click.prevent="forgotPassword">Forgot password?</a>
-      </div>
+      </div> -->
       <div class="form-group">
         <p>Don't have an account? <a href="#" @click.prevent="register">Register</a></p>
       </div>
@@ -43,11 +43,6 @@ export default {
       errorMessage: "",
     };
   },
-  beforeRouteEnter:(to, from, next) => { // 当用户回到登陆界面一定是登出状态，清除保存的用户数据并将登陆状态设置为false
-    next(vm => {
-      vm.$store.dispatch("setUser", null);
-    });
-  },
   methods: {
     async login() {
       try {
@@ -56,17 +51,13 @@ export default {
           uid: this.username,
           // rememberMe: this.rememberMe
         })
-        // Todo: 将用户的uid等信息存至前端
-        sessionStorage.setItem("userName", this.username);
-        //sessionStorage.setItem("userToken", response.data.res.token);
-        this.$store.dispatch("setUser", this.username)
-        //this.$store.dispatch("setToken", response.data.res.token)
-
-        const role = await axios.get('http://'+IP_ADDRESS+':8181/user/getUserRole/' + sessionStorage.getItem("userName"));
-        sessionStorage.setItem("userRole", role.data)
 
         // 登录成功，跳转到用户主页
-        this.$router.push('/main')
+        if (response.data.msg==='密码错误'){
+          this.errorMessage = response.data.msg
+        }else{
+          this.$router.push('/main')
+        }
         console.log(response.data)
       } catch (error) {
         // this.errorMessage = error.response.data.message
