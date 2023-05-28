@@ -10,7 +10,10 @@
           <i class="fas fa-edit"></i> Edit Course
         </button>
         <h1 class="course-name">{{ "Software Engineer" }}</h1>
-        <a href="/forum" class="forum-link">Discussion Forum</a>
+        <!-- <a href="/forum" class="forum-link">Discussion Forum</a> -->
+        <button @click="redirectToURL('http://10.26.129.56:4567/')">
+          <i class="fas fa-arrow-left">Discussion Forum</i>
+        </button>
       </nav>
     </header>
     <div class="announcement">
@@ -93,6 +96,10 @@ export default {
 
     editCourse() {
       this.$router.push('/editCourse');
+    },
+
+    redirectToURL(url) {
+      window.location.href = url;
     },
 
     async fetchEvents() {
@@ -183,7 +190,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 body {
   font-family: Arial, sans-serif;
   margin: 0;
