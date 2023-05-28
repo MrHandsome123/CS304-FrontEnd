@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div class="upper-bar">
-      <span><img class="Logo" alt="Canvas logo" src="../assets/SustechLogo.png"></span>
-      <span class="pageTitle"><h1 style="color: white">Main Page</h1></span>
-    </div>
+    <UpperBar/>
     <div class="mainPage">
       <div class="courseList">
         <CourseList :List="ListData"/>
@@ -19,6 +16,7 @@ import CourseList from "@/components/CourseList";
 import FullCalendar from "@/components/FullCalendar";
 import axios from 'axios';
 import { IP_ADDRESS } from '@/main';
+import UpperBar from "@/components/UpperBar";
 export default {
   name: 'MainPage',
   data() {
@@ -49,7 +47,7 @@ export default {
 
     async fetchTasks() {
       try {
-        const response = await axios.get("http://"+IP_ADDRESS+":8181/courseEvent/getAllCourseEvents/11451414");
+        const response = await axios.get("http://"+IP_ADDRESS+":8181/courseEvent/getAllCourseEvents/" + sessionStorage.getItem("userName"));
         const data = response.data;
         this.Events = data.map((event) => {
           return {
@@ -64,15 +62,13 @@ export default {
   },
   components: {
     FullCalendar,
-    CourseList
+    CourseList,
+    UpperBar
   }
 }
 </script>
 
 <style scoped>
-.Logo {
-  width: 60%;
-}
 .pageTitle {
    display: flex;
    text-align: end;
@@ -95,10 +91,15 @@ export default {
 }
 
 .upper-bar {
-  display: flex;
-  background: black;
-  align-content: center;
+  background-color: #333;
+  color: #fff;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  z-index: 999;
+  align-items: center;
 }
+
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

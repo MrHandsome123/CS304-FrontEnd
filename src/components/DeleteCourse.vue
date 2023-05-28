@@ -41,7 +41,7 @@ export default {
         // 创建成功提醒
         window.alert(this.courseName + " is deleted successfully!")
         console.log(response.data)
-        this.$router.push('/deletecourse')
+        location.reload()
 
       } catch (error) {
         this.errorMessage = error.response.data.message

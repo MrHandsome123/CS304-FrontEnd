@@ -1,6 +1,9 @@
 <template>
-  <div class="container">
-    <div><DeleteCourse :courses="courses"/></div>
+  <div>
+    <UpperBar/>
+    <div class="container">
+      <div><DeleteCourse :courses="courses"/></div>
+    </div>
   </div>
 </template>
 
@@ -8,6 +11,7 @@
 import DeleteCourse from "@/components/DeleteCourse";
 import axios from "axios";
 import {IP_ADDRESS} from "@/main";
+import UpperBar from "@/components/UpperBar";
 export default {
   name: "DeleteCoursePage",
   data() {
@@ -17,6 +21,11 @@ export default {
   },
   created() {
     this.fetchCourses();
+  },
+  beforeRouteEnter:(next) => { // 只有教师用户可以删课
+    if (sessionStorage.getItem("userRole") === "Student") {
+      next('/main');
+    }
   },
   methods:{
     async fetchCourses() {
@@ -35,6 +44,7 @@ export default {
     }
   },
   components: {
+    UpperBar,
     DeleteCourse
   }
 }
@@ -44,7 +54,7 @@ export default {
 .container {
   max-width: 400px;
   min-width: 500px;
-  margin: auto;
+  margin: 20px auto auto;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 5px;

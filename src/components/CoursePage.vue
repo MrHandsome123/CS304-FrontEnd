@@ -1,14 +1,20 @@
 <template>
-  <div id="app">
-    <page-component />
+  <div>
+    <UpperBar/>
+    <div id="app">
+      <page-component />
+    </div>
   </div>
+
 </template>
 
 <script>
 import PageComponent from './PageComponents.vue';
+import UpperBar from "@/components/UpperBar";
 
 export default {
   components: {
+    UpperBar,
     PageComponent,
   },
 };

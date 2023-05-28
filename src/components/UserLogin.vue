@@ -43,6 +43,11 @@ export default {
       errorMessage: "",
     };
   },
+  beforeRouteEnter:(to, from, next) => { // 当用户回到登陆界面一定是登出状态，清除保存的用户数据并将登陆状态设置为false
+    next(vm => {
+      vm.$store.dispatch("setUser", null);
+    });
+  },
   methods: {
     async login() {
       try {
@@ -51,6 +56,14 @@ export default {
           uid: this.username,
           // rememberMe: this.rememberMe
         })
+        // Todo: 将用户的uid等信息存至前端
+        sessionStorage.setItem("userName", this.username);
+        //sessionStorage.setItem("userToken", response.data.res.token);
+        this.$store.dispatch("setUser", this.username)
+        //this.$store.dispatch("setToken", response.data.res.token)
+
+        const role = await axios.get('http://'+IP_ADDRESS+':8181/user/getUserRole/' + sessionStorage.getItem("userName"));
+        sessionStorage.setItem("userRole", role.data)
 
         // 登录成功，跳转到用户主页
         this.$router.push('/main')

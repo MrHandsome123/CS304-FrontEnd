@@ -1,7 +1,7 @@
 <template>
   <div>
+    <h2> Add Course </h2>
     <form>
-      <h2>Add Course</h2>
       <div class="form-group">
       <label for="courseCode">CourseCode</label>
       <input type="text" id="courseCode" v-model="courseCode" required>
@@ -61,6 +61,7 @@ export default {
         // 创建成功提醒
         window.alert(this.courseName + " is created successfully!")
         console.log(response.data)
+        location.reload()
       } catch (error) {
         this.errorMessage = error.response.data.message
         console.log(error)
@@ -73,6 +74,10 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    color: #2c3e50;
+  }
 </style>
