@@ -68,6 +68,7 @@
   
           // 注册成功，跳转到其他页面
         //   this.$router.push('/dashboard'); // 替换为你想要跳转的目标路径
+          this.$router.push('/'); // 替换为你想要跳转的目标路径
           console.log(response.data);
           this.errorMessage = response.data.data
         } catch (error) {
@@ -77,7 +78,8 @@
       },
       login() {
         // 跳转到登录页面
-        this.$router.push('/login'); // 替换为你的登录页面路径
+        // this.$router.push('/login'); // 替换为你的登录页面路径
+        this.$router.push('/');
       },
     },
   };
