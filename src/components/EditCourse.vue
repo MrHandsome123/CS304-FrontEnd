@@ -1,5 +1,7 @@
 <template>
-    <div id="create-page">
+    <div>
+      <UpperBar/>
+      <div id="create-page">
       <h1>Create Course Event</h1>
   
       <!-- 选择类型的按钮 -->
@@ -56,12 +58,15 @@
         <button type="submit" class="edit-button">Create</button>
       </form>
     </div>
+    </div>
+    
   </template>
   
   
   <script>
   import axios from 'axios';
   import { IP_ADDRESS } from '@/main';
+  import UpperBar from "@/components/UpperBar";
   export default {
     data() {
         return {
@@ -83,10 +88,10 @@
           if (this.selectedType === 'announcement') {
             // Only send title and eventResources for announcement
             const { title, eventResources } = this.content;
-            const response = await axios.post(`http://${IP_ADDRESS}:8181/courseAnnouncement/addCourseAnnouncement/1?content=${eventResources}&subject=${title}`);
+            const response = await axios.post(`http://${IP_ADDRESS}:8181/courseAnnouncement/addCourseAnnouncement/`+this.$route.params.courseId+`?content=${eventResources}&subject=${title}`);
             console.log(response.data);
           } else {
-            const response = await axios.post(`http://${IP_ADDRESS}:8181/courseEvent/addCourseEvent/1`, {
+            const response = await axios.post(`http://${IP_ADDRESS}:8181/courseEvent/addCourseEvent/`+this.$route.params.courseId, {
                 endTime: this.content.endTime,
                 eventInstructor: this.content.eventInstructor,
                 eventName: this.content.title,
@@ -96,11 +101,15 @@
             });
             console.log(response.data);
           }
+          this.$router.push({name:'course', params: this.$route.params});
           
         } catch (error) {
             console.log(error);
         }
       }
+    },
+    components: {
+      UpperBar
     }
   };
   </script>
@@ -175,6 +184,8 @@
     padding: 8px 12px;
     transition: background-color 0.3s;
     align-self: flex-start;
+    margin-top: 1rem;
+    background-color: #ffffff;
   }
   
   .edit-button:hover {
