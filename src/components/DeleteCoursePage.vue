@@ -22,10 +22,11 @@ export default {
   created() {
     this.fetchCourses();
   },
-  beforeRouteEnter:(next) => { // 只有教师用户可以删课
-    if (sessionStorage.getItem("userRole") === "Student") {
-      next('/main');
-    }
+  beforeRouteEnter:(to, from, next) => {
+    next(vm => {
+      window.alert("You are not certified to do this operation!")
+      vm.$router.push("/main")
+    });
   },
   methods:{
     async fetchCourses() {

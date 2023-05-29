@@ -13,10 +13,11 @@ import UpperBar from "@/components/UpperBar";
 
 export default {
   name: "AddCoursePage",
-  beforeRouteEnter:(next) => { // 只有教师用户可以加课
-    if (sessionStorage.getItem("userRole") === "Student") {
-      next('/main');
-    }
+  beforeRouteEnter:(to, from, next) => {
+    next(vm => {
+      window.alert("You are not certified to do this operation!")
+      vm.$router.push("/main")
+    });
   },
   components: {
     AddCourse,
