@@ -29,7 +29,7 @@ const routes = [
     component: UserRegister
   },
   {
-    path: "/editCourse",
+    path: "/editCourse/:courseId/:courseName",
     name: "editCourse",
     component: EditCourse
   },
