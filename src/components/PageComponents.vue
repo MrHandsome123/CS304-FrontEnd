@@ -3,15 +3,15 @@
     <header>
       <nav class="navigation">
         
-        <button class="back-button" @click="goBack">
+        <!-- <button class="back-button" @click="goBack">
           <i class="fas fa-arrow-left"></i> Go Back
-        </button>
-        <button class="edit-button" @click="editCourse">
+        </button> -->
+        <button v-if="userRole === 'Teacher'" class="edit-button" @click="editCourse">
           <i class="fas fa-edit"></i> Edit Course
         </button>
-        <h1 class="course-name">{{ "Software Engineer" }}</h1>
+        <h1 class="course-name">{{ this.$route.params.courseName }}</h1>
         <!-- <a href="/forum" class="forum-link">Discussion Forum</a> -->
-        <button @click="redirectToURL('http://10.26.129.56:4567/')">
+        <button class="back-button" @click="redirectToURL('http://10.26.129.56:4567/')">
           <i class="fas fa-arrow-left">Discussion Forum</i>
         </button>
       </nav>
@@ -88,12 +88,9 @@ export default {
     this.fetchEvents();
     this.fetchAnnouncements();
     this.fetchHomeworkExamples();
+    this.userRole = sessionStorage.getItem('userRole');
   },
   methods: {
-    goBack() {
-      // Implement your logic for going back
-    },
-
     editCourse() {
       this.$router.push('/editCourse');
     },
@@ -104,10 +101,11 @@ export default {
 
     async fetchEvents() {
       try {
+        console.log(sessionStorage.getItem('userRole'))
         console.log(this.$route.params.courseId);
 
         // Replace with your API endpoint
-        const response = await axios.get("http://"+IP_ADDRESS+":8181/courseEvent/listCourseEvent/1");
+        const response = await axios.get("http://"+IP_ADDRESS+":8181/courseEvent/listCourseEvent/"+this.$route.params.courseId);
         // const response = null;
         const data = response.data;
         this.events = data.map((event, index) => {
@@ -135,7 +133,7 @@ export default {
     async fetchAnnouncements() {
       try {
         // Replace with your API endpoint
-        const response = await axios.get("http://"+IP_ADDRESS+":8181/courseAnnouncement/listCourseAnnouncement/1");
+        const response = await axios.get("http://"+IP_ADDRESS+":8181/courseAnnouncement/listCourseAnnouncement/"+this.$route.params.courseId);
         // const response = null;
         this.announcements = response.data.map(announcement => {
           return {
@@ -152,7 +150,7 @@ export default {
 
     async fetchHomeworkExamples() {
       try {
-        const response = await axios.get("http://"+IP_ADDRESS+":8181/courseEvent/listCourseEvent/1/Assignment");
+        const response = await axios.get("http://"+IP_ADDRESS+":8181/courseEvent/listCourseEvent/"+this.$route.params.courseId+"/Assignment");
         // const response = null;
         this.homeworkExamples = response.data.map((homework) => {
           return {
@@ -190,7 +188,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -245,7 +243,7 @@ header {
   width: 100%;
   max-width: 800px;
   margin-bottom: 1rem;
-  background-color: #ecf0f1; /* 设置导航栏的背景色 */
+  background-color: transparent; /* 设置导航栏的背景色 */
 }
 
 .back-button {
@@ -312,7 +310,6 @@ header {
   color: #999;
   margin-top: 0.5rem;
 }
-
 
 h2 {
   margin-bottom: 1rem;
