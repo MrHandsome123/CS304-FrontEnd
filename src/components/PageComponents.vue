@@ -80,6 +80,10 @@ export default {
       events: [],
       announcements: [],
       homeworkExamples: [],
+      courseParams:{
+        courseId: this.$route.params.courseId,
+        courseName: this.$route.params.courseName,
+      }
     };
   },
 
@@ -92,7 +96,7 @@ export default {
   },
   methods: {
     editCourse() {
-      this.$router.push('/editCourse');
+      this.$router.push({name:'editCourse', params:this.courseParams});
     },
 
     redirectToURL(url) {
